@@ -1,4 +1,5 @@
 import 'package:daily_expense/database/expense_db.dart';
+import 'package:daily_expense/ui/widget/expense_total_cost_widget.dart';
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -35,6 +36,9 @@ class _SettingScreenState extends State<SettingScreen> {
                           Map<String,dynamic> category = uniQueCategoryList[position];
                           return ListTile(
                             title: Text(category['category'] ?? ''),
+                            trailing: ExpenseTotalCost(
+                              todayCostFuture: widget.expenseDatabaseHelper.totalCostByCategory(category['category'] ?? ''),
+                            ),
                           );
                         }),
                   );

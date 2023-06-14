@@ -65,4 +65,9 @@ class ExpenseDatabaseHelper{
     final uniqueCategory = await _expenseDb.rawQuery('select distinct category from $expenseTable');
     return uniqueCategory;
   }
+  Future<Map<String,dynamic>> totalCostByCategory(String category) async{
+    final totalCost = await _expenseDb.rawQuery('select SUM(cost) from $expenseTable where category = "$category"');
+    return totalCost[0];
+  }
+
 }
