@@ -14,7 +14,7 @@ class ExpenseTotalCost extends StatelessWidget {
         future: _todayCostFuture,
         builder: (context,snapshot){
           if(snapshot.hasData){
-            return Text('Total cost - ${snapshot.data?['SUM(cost)']} Ks',
+            return Text('Total cost - ${snapshot.data?['SUM(cost)'] ?? 0} Ks',
               style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.indigo),);
           }
           else if(snapshot.hasError){

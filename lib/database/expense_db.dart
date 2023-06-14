@@ -61,4 +61,8 @@ class ExpenseDatabaseHelper{
     }).toSet().toList();
     return dateList;
   }
+  Future<List<Map<String,dynamic>>> getUniqueCategory() async{
+    final uniqueCategory = await _expenseDb.rawQuery('select distinct category from $expenseTable');
+    return uniqueCategory;
+  }
 }

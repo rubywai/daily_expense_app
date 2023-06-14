@@ -1,6 +1,7 @@
 import 'package:daily_expense/database/expense_db.dart';
 import 'package:daily_expense/ui/screen/all_expense_list_screen.dart';
 import 'package:daily_expense/ui/screen/home.dart';
+import 'package:daily_expense/ui/screen/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _bodyList = [Home(expenseDatabaseHelper: widget.expenseDatabaseHelper),
      AllExpenseList(expenseDatabaseHelper: widget.expenseDatabaseHelper),
-    const Center(child: Text('Setting'),)];
+     SettingScreen(expenseDatabaseHelper: widget.expenseDatabaseHelper,)];
   }
   @override
   Widget build(BuildContext context) {
