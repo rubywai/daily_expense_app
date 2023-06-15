@@ -5,10 +5,11 @@ import '../../database/model/expense_model.dart';
 class ExpenseListWidget extends StatefulWidget {
   const ExpenseListWidget({
     super.key,
-    required Future<List<ExpenseModel>> expenseFuture,
+    required Future<List<ExpenseModel>> expenseFuture, this.delete,
   }) : _expenseFuture = expenseFuture;
 
   final Future<List<ExpenseModel>> _expenseFuture;
+  final Function(int)? delete;
 
   @override
   State<ExpenseListWidget> createState() => _ExpenseListWidgetState();
@@ -34,10 +35,14 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
                       Text('${time.day}/${time.month}/${time.year} ${time.hour}:${time.minute}'),
                     Card(
                       child: ListTile(
-                        leading: IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: (){
-
+                        leading: widget.delete == null ?
+                        const Text('') :
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            if(expenseModel.id != null && widget.delete != null) {
+                              widget.delete!(expenseModel.id!);
+                            }
                           },
                         ),
                         title: Text(expenseModel.name ?? ''),

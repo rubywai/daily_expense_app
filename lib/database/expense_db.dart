@@ -69,5 +69,8 @@ class ExpenseDatabaseHelper{
     final totalCost = await _expenseDb.rawQuery('select SUM(cost) from $expenseTable where category = "$category"');
     return totalCost[0];
   }
+  Future deleteExpenseById(int id) async{
+    await _expenseDb.rawQuery('delete from $expenseTable where id = $id');
+  }
 
 }

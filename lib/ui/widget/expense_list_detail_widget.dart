@@ -8,11 +8,12 @@ class ExpenseListDetailWidget extends StatelessWidget {
   const ExpenseListDetailWidget({
     super.key,
     required Future<Map<String, dynamic>> todayCostFuture,
-    required Future<List<ExpenseModel>> todayExpenseFuture,
+    required Future<List<ExpenseModel>> todayExpenseFuture, this.delete,
   }) : _todayCostFuture = todayCostFuture, _todayExpenseFuture = todayExpenseFuture;
 
   final Future<Map<String, dynamic>> _todayCostFuture;
   final Future<List<ExpenseModel>> _todayExpenseFuture;
+  final Function(int)? delete;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class ExpenseListDetailWidget extends StatelessWidget {
       children: [
         ExpenseTotalCost(todayCostFuture: _todayCostFuture),
         Divider(),
-        Expanded(child: ExpenseListWidget(expenseFuture: _todayExpenseFuture)),
+        Expanded(child: ExpenseListWidget(expenseFuture: _todayExpenseFuture,delete: delete,)),
       ],
     );
   }

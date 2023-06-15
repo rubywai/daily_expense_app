@@ -5,23 +5,23 @@ import 'package:daily_expense/ui/screen/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
-  final ExpenseDatabaseHelper expenseDatabaseHelper;
-  const MainScreen({Key? key, required this.expenseDatabaseHelper}) : super(key: key);
+  const MainScreen({Key? key,}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late Widget _body = Home(expenseDatabaseHelper: widget.expenseDatabaseHelper);
+  late Widget _body = const Home();
   late List<Widget> _bodyList;
   int _selectNavigationInex = 0;
   @override
   void initState() {
     super.initState();
-    _bodyList = [Home(expenseDatabaseHelper: widget.expenseDatabaseHelper),
-     AllExpenseList(expenseDatabaseHelper: widget.expenseDatabaseHelper),
-     SettingScreen(expenseDatabaseHelper: widget.expenseDatabaseHelper,)];
+    _bodyList = [
+      const Home(),
+     AllExpenseList(),
+     SettingScreen()];
   }
   @override
   Widget build(BuildContext context) {

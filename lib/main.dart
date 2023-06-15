@@ -1,4 +1,5 @@
 import 'package:daily_expense/database/expense_db.dart';
+import 'package:daily_expense/inherited_widget/database_provider.dart';
 import 'package:daily_expense/ui/screen/home.dart';
 import 'package:daily_expense/ui/screen/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +17,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.indigo
+    return  DatabaseProvider(
+      expenseDatabaseHelper,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: Colors.indigo
+
+        ),
+        //home: Home(expenseDatabaseHelper: expenseDatabaseHelper,),
+        home: MainScreen(),
 
       ),
-      //home: Home(expenseDatabaseHelper: expenseDatabaseHelper,),
-      home: MainScreen(expenseDatabaseHelper: expenseDatabaseHelper,),
-
     );
   }
 }

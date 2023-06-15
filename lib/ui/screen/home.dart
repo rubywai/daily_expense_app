@@ -1,12 +1,11 @@
 import 'package:daily_expense/database/expense_db.dart';
 import 'package:daily_expense/database/model/expense_model.dart';
+import 'package:daily_expense/inherited_widget/database_provider.dart';
 import 'package:daily_expense/ui/screen/save_screen.dart';
 import 'package:daily_expense/utils/date_time_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../widget/expense_list_detail_widget.dart';
-import '../widget/expense_list_widget.dart';
-import '../widget/expense_total_cost_widget.dart';
 //sqflite
 //drift (ORM)
 //dictionary
@@ -15,25 +14,39 @@ import '../widget/expense_total_cost_widget.dart';
 //postgres sql (supabase)
 
 class Home extends StatefulWidget {
-  const Home({Key? key, required this.expenseDatabaseHelper}) : super(key: key);
-  final ExpenseDatabaseHelper expenseDatabaseHelper;
+  const Home({Key? key}) : super(key: key);
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
- late  Future<List<ExpenseModel>> _todayExpenseFuture = widget.expenseDatabaseHelper.getAllExpenseByDate(todayDate());
- late Future<Map<String,dynamic>> _todayCostFuture = widget.expenseDatabaseHelper.totalCostOfToday(todayDate());
+ late  Future<List<ExpenseModel>> _todayExpenseFuture;
+ late Future<Map<String,dynamic>> _todayCostFuture ;
+ late DatabaseProvider databaseProvider;
   @override
   void initState() {
     super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    databaseProvider = DatabaseProvider.of(context);
+    _todayExpenseFuture = databaseProvider.expenseDatabaseHelper.getAllExpenseByDate(todayDate());
+    _todayCostFuture =  databaseProvider.expenseDatabaseHelper.totalCostOfToday(todayDate());
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title:  Text('Daily Expanse(Today ${todayDate()})'),
       centerTitle: true,),
-      body: ExpenseListDetailWidget(todayCostFuture: _todayCostFuture, todayExpenseFuture: _todayExpenseFuture),
+      body: ExpenseListDetailWidget(
+        todayCostFuture: _todayCostFuture,
+        todayExpenseFuture: _todayExpenseFuture,
+        delete: (int position) async{
+          await databaseProvider.expenseDatabaseHelper.deleteExpenseById(position);
+          _refreshScreen();
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async{
@@ -42,18 +55,21 @@ class _HomeState extends State<Home> {
                builder: (context){
                   return  AlertDialog(
                     title: const Text('Enter your expense'),
-                    content: SaveScreen(expenseDatabaseHelper: widget.expenseDatabaseHelper,),
+                    content: SaveScreen(expenseDatabaseHelper: databaseProvider.expenseDatabaseHelper,),
                   );
                });
          if(dialogResult == "inserted"){
-           setState(() {
-             _todayExpenseFuture = widget.expenseDatabaseHelper.getAllExpenseByDate(todayDate());
-             _todayCostFuture = widget.expenseDatabaseHelper.totalCostOfToday(todayDate());
-           });
+           _refreshScreen();
          }
         },
       ),
     );
+  }
+  void _refreshScreen(){
+    setState(() {
+      _todayExpenseFuture = databaseProvider.expenseDatabaseHelper.getAllExpenseByDate(todayDate());
+      _todayCostFuture = databaseProvider.expenseDatabaseHelper.totalCostOfToday(todayDate());
+    });
   }
 }
 

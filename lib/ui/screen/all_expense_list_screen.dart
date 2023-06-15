@@ -1,23 +1,35 @@
 import 'package:daily_expense/database/expense_db.dart';
+import 'package:daily_expense/inherited_widget/database_provider.dart';
 import 'package:daily_expense/ui/screen/expense_list_detail_screen.dart';
 import 'package:daily_expense/ui/widget/expense_total_cost_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AllExpenseList extends StatefulWidget {
-  const AllExpenseList({Key? key, required this.expenseDatabaseHelper})
+  const AllExpenseList({Key? key})
       : super(key: key);
-  final ExpenseDatabaseHelper expenseDatabaseHelper;
 
   @override
   State<AllExpenseList> createState() => _AllExpenseListState();
 }
 
 class _AllExpenseListState extends State<AllExpenseList> {
+  late DatabaseProvider databaseProvider;
+  @override
+  void initState() {
+    super.initState();
+
+  }
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    databaseProvider = DatabaseProvider.of(context);
+  }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
-        future: widget.expenseDatabaseHelper.getDateList(),
+        future: databaseProvider.expenseDatabaseHelper.getDateList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<String> dateList = snapshot.data ?? [];
@@ -25,7 +37,7 @@ class _AllExpenseListState extends State<AllExpenseList> {
               children: [
                 AppBar(),
                 Text('${dateList.length} days'),
-                ExpenseTotalCost(todayCostFuture: widget.expenseDatabaseHelper.totalCost()),
+                ExpenseTotalCost(todayCostFuture: databaseProvider.expenseDatabaseHelper.totalCost()),
                 Expanded(
                   child: ListView.builder(
                       itemCount: dateList.length,
@@ -36,14 +48,14 @@ class _AllExpenseListState extends State<AllExpenseList> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder:  (_) =>
                                     ExpenseListDetailScreen(
-                                        todayCostFuture: widget.expenseDatabaseHelper.totalCostOfToday(date),
-                                        todayExpenseFuture: widget.expenseDatabaseHelper.getAllExpenseByDate(date),
+                                        todayCostFuture: databaseProvider.expenseDatabaseHelper.totalCostOfToday(date),
+                                        todayExpenseFuture: databaseProvider.expenseDatabaseHelper.getAllExpenseByDate(date),
                                         date: date)));
                           },
                           child: Card(
                             child: ListTile(
                               title: Text(date),
-                              trailing: ExpenseTotalCost(todayCostFuture: widget.expenseDatabaseHelper.totalCostOfToday(date),),
+                              trailing: ExpenseTotalCost(todayCostFuture: databaseProvider.expenseDatabaseHelper.totalCostOfToday(date),),
                             ),
                           ),
                         );
