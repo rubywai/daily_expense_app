@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
     super.didChangeDependencies();
     databaseProvider = DatabaseProvider.of(context);
     _todayExpenseFuture = databaseProvider.expenseDatabaseHelper.getAllExpenseByDate(todayDate());
-    _todayCostFuture =  databaseProvider.expenseDatabaseHelper.totalCostOfToday(todayDate());
+    _todayCostFuture =  databaseProvider.expenseDatabaseHelper.totalCostByDate(todayDate());
   }
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
   void _refreshScreen(){
     setState(() {
       _todayExpenseFuture = databaseProvider.expenseDatabaseHelper.getAllExpenseByDate(todayDate());
-      _todayCostFuture = databaseProvider.expenseDatabaseHelper.totalCostOfToday(todayDate());
+      _todayCostFuture = databaseProvider.expenseDatabaseHelper.totalCostByDate(todayDate());
     });
   }
 }

@@ -17,7 +17,7 @@ class ExpenseDatabaseHelper{
     await _createExpenseTable();
   }
   Future<Database> _createDatabase() async{
-    var databasePath = await getDatabasesPath();
+    var databasePath = await getDatabasesPath();//
     String path =  join(databasePath,dbName);
     _expenseDb = await openDatabase(path);
     return _expenseDb;
@@ -47,10 +47,11 @@ class ExpenseDatabaseHelper{
     final totalCost = await _expenseDb.rawQuery("select SUM(cost) from $expenseTable");
     return totalCost[0];
   }
-  Future<Map<String,dynamic>> totalCostOfToday(String date) async{
+  Future<Map<String,dynamic>> totalCostByDate(String date) async{
     final totalCost = await _expenseDb.rawQuery('select SUM(cost) from $expenseTable where time like "$date%"');
     return totalCost[0];
   }
+
   Future<List<String>> getDateList() async{
     final rawDateList = await _expenseDb.rawQuery('select time from $expenseTable');
    final dateList =  rawDateList.map((e){
@@ -60,7 +61,8 @@ class ExpenseDatabaseHelper{
 
     }).toSet().toList();
     return dateList;
-  }
+  } //split , set
+
   Future<List<Map<String,dynamic>>> getUniqueCategory() async{
     final uniqueCategory = await _expenseDb.rawQuery('select distinct category from $expenseTable');
     return uniqueCategory;

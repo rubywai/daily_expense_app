@@ -36,6 +36,9 @@ class _SettingScreenState extends State<SettingScreen> {
         builder: (context,snapshot){
           if(snapshot.hasData){
             Map<String,double> priceMap = snapshot.data ?? {};
+            if(priceMap.isEmpty){
+              return const Center(child: Text('Empty'),);
+            }
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -47,7 +50,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       );
                     }).toList(),
                   ),
-                  Divider(),
+                  const Divider(),
                   PieChart(dataMap: priceMap,
                     chartValuesOptions: const ChartValuesOptions(
                       showChartValueBackground: true,

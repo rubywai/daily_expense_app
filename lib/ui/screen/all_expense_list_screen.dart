@@ -48,14 +48,14 @@ class _AllExpenseListState extends State<AllExpenseList> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder:  (_) =>
                                     ExpenseListDetailScreen(
-                                        todayCostFuture: databaseProvider.expenseDatabaseHelper.totalCostOfToday(date),
+                                        todayCostFuture: databaseProvider.expenseDatabaseHelper.totalCostByDate(date),
                                         todayExpenseFuture: databaseProvider.expenseDatabaseHelper.getAllExpenseByDate(date),
                                         date: date)));
                           },
                           child: Card(
                             child: ListTile(
                               title: Text(date),
-                              trailing: ExpenseTotalCost(todayCostFuture: databaseProvider.expenseDatabaseHelper.totalCostOfToday(date),),
+                              trailing: ExpenseTotalCost(todayCostFuture: databaseProvider.expenseDatabaseHelper.totalCostByDate(date),),
                             ),
                           ),
                         );
