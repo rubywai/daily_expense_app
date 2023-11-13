@@ -1,4 +1,3 @@
-import 'package:daily_expense/database/expense_db.dart';
 import 'package:daily_expense/ui/screen/all_expense_list_screen.dart';
 import 'package:daily_expense/ui/screen/home.dart';
 import 'package:daily_expense/ui/screen/setting_screen.dart';
@@ -14,25 +13,25 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late Widget _body = const Home();
   late List<Widget> _bodyList;
-  int _selectNavigationInex = 0;
+  int _selectNavigationIndex = 0;
   @override
   void initState() {
     super.initState();
     _bodyList = [
       const Home(),
-     AllExpenseList(),
-     SettingScreen()];
+     const AllExpenseList(),
+     const SettingScreen()];
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _body,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectNavigationInex,
+        selectedIndex: _selectNavigationIndex,
         onDestinationSelected: (index){
           setState(() {
             _body = _bodyList[index];
-            _selectNavigationInex = index;
+            _selectNavigationIndex = index;
           });
         },
         destinations: const [

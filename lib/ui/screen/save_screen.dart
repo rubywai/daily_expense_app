@@ -1,5 +1,4 @@
 import 'package:daily_expense/database/expense_db.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SaveScreen extends StatefulWidget {
@@ -26,7 +25,7 @@ class _SaveScreenState extends State<SaveScreen> {
                 if(name == null || name.isEmpty){
                   return 'Please enter your name';
                 }
-
+              return null;
               },
               onSaved: (name){
                 _name = name;
@@ -36,16 +35,17 @@ class _SaveScreenState extends State<SaveScreen> {
               ),
             ),
             TextFormField(
+
               validator: (cost){
                 if(cost == null || cost.isEmpty){
                   return 'Please enter your cost';
                 }
-
+                return null;
               },
               onSaved: (cost){
                 _cost = cost;
               },
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               decoration: const InputDecoration(
                   labelText: 'Cost'
               ),
@@ -55,7 +55,7 @@ class _SaveScreenState extends State<SaveScreen> {
                 if(category == null || category.isEmpty){
                   return 'Please enter your category';
                 }
-
+                return null;
               },
               onSaved: (category){
                 _category = category;
@@ -71,7 +71,7 @@ class _SaveScreenState extends State<SaveScreen> {
               _formKey.currentState?.save();
               if(_formKey.currentState?.validate() ??false){
                 DateTime now = DateTime.now();
-                int? cost = int.tryParse(_cost!);
+                double? cost = double.tryParse(_cost!);
                 if(cost != null) {
                   await widget.expenseDatabaseHelper.insertExpense(name: _name!, cost: cost, time: now.toString(), category: _category!);
                   if(mounted) {

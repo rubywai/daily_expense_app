@@ -1,7 +1,7 @@
 class ExpenseModel {
   int? id;
   String? name;
-  int? cost;
+  num? cost;
   String? time;
   String? category;
 

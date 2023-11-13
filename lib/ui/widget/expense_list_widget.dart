@@ -46,7 +46,7 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
                           },
                         ),
                         title: Text(expenseModel.name ?? ''),
-                        subtitle: Text('${expenseModel.cost} Ks'),
+                        subtitle: Text('${expenseModel.cost} S\$'),
                         trailing: Text(expenseModel.category ?? ''),
                       ),
                     ),
@@ -55,7 +55,7 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
               });
         }
         else if(snapshot.hasError){
-
+          return Center(child: Text('error ${snapshot.error}'),);
         }
         return const CircularProgressIndicator.adaptive();
       },

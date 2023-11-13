@@ -23,10 +23,10 @@ class ExpenseDatabaseHelper{
     return _expenseDb;
   }
   Future<void> _createExpenseTable()async{
-    return await _expenseDb.execute('create table if not exists $expenseTable(id integer primary key,name text,cost integer,time text,category text )');
+    return await _expenseDb.execute('create table if not exists $expenseTable(id integer primary key,name text,cost real,time text,category text )');
   }
 
-  Future<void> insertExpense({required String name,required int cost,required String time,
+  Future<void> insertExpense({required String name,required double cost,required String time,
   required String category}){
    return _expenseDb.execute('insert into $expenseTable (name,cost,time,category)'
         'values ("$name",$cost,"$time","$category")');
@@ -53,7 +53,7 @@ class ExpenseDatabaseHelper{
   }
 
   Future<List<String>> getDateList() async{
-    final rawDateList = await _expenseDb.rawQuery('select time from $expenseTable');
+    final rawDateList = await _expenseDb.rawQuery('select time from $expenseTable order by id desc');
    final dateList =  rawDateList.map((e){
       String rawDate = e['time'].toString();
       String date = rawDate.split(' ')[0];

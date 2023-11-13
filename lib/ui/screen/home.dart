@@ -1,4 +1,3 @@
-import 'package:daily_expense/database/expense_db.dart';
 import 'package:daily_expense/database/model/expense_model.dart';
 import 'package:daily_expense/inherited_widget/database_provider.dart';
 import 'package:daily_expense/ui/screen/save_screen.dart';
@@ -37,7 +36,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Text('Daily Expanse(Today ${todayDate()})'),
+      appBar: AppBar(title:  Text('Daily Expense(Today ${todayDate()})'),
       centerTitle: true,),
       body: ExpenseListDetailWidget(
         todayCostFuture: _todayCostFuture,

@@ -20,7 +20,7 @@ class ExpenseListDetailWidget extends StatelessWidget {
     return Column(
       children: [
         ExpenseTotalCost(todayCostFuture: _todayCostFuture),
-        Divider(),
+        const Divider(),
         Expanded(child: ExpenseListWidget(expenseFuture: _todayExpenseFuture,delete: delete,)),
       ],
     );

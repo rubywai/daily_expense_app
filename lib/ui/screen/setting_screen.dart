@@ -1,6 +1,4 @@
-import 'package:daily_expense/database/expense_db.dart';
 import 'package:daily_expense/inherited_widget/database_provider.dart';
-import 'package:daily_expense/ui/widget/expense_total_cost_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 
@@ -46,7 +44,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     children: priceMap.entries.map((e){
                       return ListTile(
                         title: Text(e.key),
-                        trailing: Text('${e.value.toInt()} Ks' ),
+                        trailing: Text('${e.value.toStringAsFixed(2)} S\$' ),
                       );
                     }).toList(),
                   ),
@@ -57,8 +55,9 @@ class _SettingScreenState extends State<SettingScreen> {
                       showChartValues: true,
                       showChartValuesInPercentage: false,
                       showChartValuesOutside: false,
-                      decimalPlaces: 0,
-                    ),)
+                      decimalPlaces: 1,
+                    ),
+                  centerText: 'S\$',)
                 ],
               ),
             );
@@ -78,7 +77,6 @@ class _SettingScreenState extends State<SettingScreen> {
     for (var value in uniqueCategoryList) {
       String category = value['category'];
       Map<String,dynamic> totalCostByCategory = await databaseProvider.expenseDatabaseHelper.totalCostByCategory(category);
-      print('total cost $totalCostByCategory');
       double price = double.tryParse(totalCostByCategory['SUM(cost)'].toString()) ?? 0;
       priceMap[category] = price;
     }
