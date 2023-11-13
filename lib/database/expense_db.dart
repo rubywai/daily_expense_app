@@ -2,7 +2,7 @@ import 'package:daily_expense/database/model/expense_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ExpenseDatabaseHelper{
+class ExpenseDatabaseHelper {
   // databasepath/expense.db
   //name , cost , datetime, category
   //Future //Stream
@@ -12,67 +12,99 @@ class ExpenseDatabaseHelper{
   late Database _expenseDb;
   final String dbName = 'expense.db';
   final String expenseTable = 'expense_table';
-  Future<void> init() async{
+
+  Future<void> init() async {
     await _createDatabase();
     await _createExpenseTable();
   }
-  Future<Database> _createDatabase() async{
-    var databasePath = await getDatabasesPath();//
-    String path =  join(databasePath,dbName);
+
+  Future<Database> _createDatabase() async {
+    var databasePath = await getDatabasesPath(); //
+    String path = join(databasePath, dbName);
     _expenseDb = await openDatabase(path);
     return _expenseDb;
   }
-  Future<void> _createExpenseTable()async{
-    return await _expenseDb.execute('create table if not exists $expenseTable(id integer primary key,name text,cost real,time text,category text )');
+
+  Future<void> _createExpenseTable() async {
+    return await _expenseDb.execute(
+        'create table if not exists $expenseTable(id integer primary key,name text,cost real,time text,category text )');
   }
 
-  Future<void> insertExpense({required String name,required double cost,required String time,
-  required String category}){
-   return _expenseDb.execute('insert into $expenseTable (name,cost,time,category)'
-        'values ("$name",$cost,"$time","$category")');
+  Future<void> insertExpense({
+    required String name,
+    required double cost,
+    required String time,
+    required String category,
+  }) {
+    return _expenseDb
+        .execute('insert into $expenseTable (name,cost,time,category)'
+            'values ("$name",$cost,"$time","$category")');
   }
-  Future<List<ExpenseModel>> getAllExpense() async{
-    List<Map<String,dynamic>> expenseMap = await _expenseDb.rawQuery('select * from $expenseTable');
-    return expenseMap.map((e){
-      return ExpenseModel.fromJson(e);
-    }).toList();
-  }
-  Future<List<ExpenseModel>> getAllExpenseByDate(String date) async{
-    List<Map<String,dynamic>> expenseMap = await _expenseDb.rawQuery('select * from $expenseTable where time like "$date%"');
+
+  Future<List<ExpenseModel>> getAllExpense() async {
+    List<Map<String, dynamic>> expenseMap =
+        await _expenseDb.rawQuery('select * from $expenseTable');
     return expenseMap.map((e) {
       return ExpenseModel.fromJson(e);
     }).toList();
   }
-  Future<Map<String,dynamic>> totalCost() async{
-    final totalCost = await _expenseDb.rawQuery("select SUM(cost) from $expenseTable");
-    return totalCost[0];
+
+  Future<List<ExpenseModel>> getAllExpenseByDate(String date) async {
+    List<Map<String, dynamic>> expenseMap = await _expenseDb
+        .rawQuery('select * from $expenseTable where time like "$date%"');
+    return expenseMap.map((e) {
+      return ExpenseModel.fromJson(e);
+    }).toList();
   }
-  Future<Map<String,dynamic>> totalCostByDate(String date) async{
-    final totalCost = await _expenseDb.rawQuery('select SUM(cost) from $expenseTable where time like "$date%"');
+
+  Future<Map<String, dynamic>> totalCost() async {
+    final totalCost =
+        await _expenseDb.rawQuery("select SUM(cost) from $expenseTable");
     return totalCost[0];
   }
 
-  Future<List<String>> getDateList() async{
-    final rawDateList = await _expenseDb.rawQuery('select time from $expenseTable order by id desc');
-   final dateList =  rawDateList.map((e){
-      String rawDate = e['time'].toString();
-      String date = rawDate.split(' ')[0];
-      return date;
+  Future<Map<String, dynamic>> totalCostByDate(String date) async {
+    final totalCost = await _expenseDb.rawQuery(
+        'select SUM(cost) from $expenseTable where time like "$date%"');
+    return totalCost[0];
+  }
 
-    }).toSet().toList();
+  Future<List<String>> getDateList() async {
+    final rawDateList = await _expenseDb
+        .rawQuery('select time from $expenseTable order by id desc');
+    final dateList = rawDateList
+        .map((e) {
+          String rawDate = e['time'].toString();
+          String date = rawDate.split(' ')[0];
+          return date;
+        })
+        .toSet()
+        .toList();
     return dateList;
   } //split , set
 
-  Future<List<Map<String,dynamic>>> getUniqueCategory() async{
-    final uniqueCategory = await _expenseDb.rawQuery('select distinct category from $expenseTable');
-    return uniqueCategory;
-  }
-  Future<Map<String,dynamic>> totalCostByCategory(String category) async{
-    final totalCost = await _expenseDb.rawQuery('select SUM(cost) from $expenseTable where category = "$category"');
-    return totalCost[0];
-  }
-  Future deleteExpenseById(int id) async{
-    await _expenseDb.rawQuery('delete from $expenseTable where id = $id');
+  Future<List<String>> getCategoryList(String category) async {
+    final uniqueDateList = await _expenseDb.rawQuery(
+        'select distinct category from $expenseTable where category like "$category%"');
+    final cateList = uniqueDateList.map((e) {
+      return e['category'].toString();
+    }).toList();
+    return cateList;
   }
 
+  Future<List<Map<String, dynamic>>> getUniqueCategory() async {
+    final uniqueCategory = await _expenseDb
+        .rawQuery('select distinct category from $expenseTable');
+    return uniqueCategory;
+  }
+
+  Future<Map<String, dynamic>> totalCostByCategory(String category) async {
+    final totalCost = await _expenseDb.rawQuery(
+        'select SUM(cost) from $expenseTable where category = "$category"');
+    return totalCost[0];
+  }
+
+  Future deleteExpenseById(int id) async {
+    await _expenseDb.rawQuery('delete from $expenseTable where id = $id');
+  }
 }
